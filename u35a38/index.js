@@ -2,17 +2,19 @@ document.addEventListener("DOMContentLoaded", init);
 
 function init() {
     const script = document.getElementById('u35a38');
+    const originPath = getOriginPath(script.src);
+    const userConfig = getUserConfig(script.src);
+
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = 'u35a38/styles.css';
-    const userConfig = getUserConfig(script.src);
+    stylesheet.href = `${originPath}styles.css`;
 
     const element = document.createElement('div');
     element.className = 'u35a38';
     setPosition(element, userConfig['align'], userConfig['valign']);
     const winWidth = window.innerWidth;
     setSize(element, userConfig['width'], winWidth);
-    element.innerHTML = getTemplate();
+    element.innerHTML = getTemplate(originPath);
 
     script.after(stylesheet);
     stylesheet.after(element);
@@ -25,6 +27,11 @@ function init() {
 
     const closeButton = document.querySelector('.u35a38-close-button');
     closeButton.onclick = () => {element.style.display = 'none';};
+}
+
+function getOriginPath(link) {
+    const lastSymbol = link.indexOf('index.js');
+    return link.slice(0, lastSymbol);
 }
 
 function setPosition(element, align, valign) {
@@ -126,21 +133,21 @@ function getFontSize(width) {
     return `${fontSize}px`;
 }
 
-function getTemplate() {
+function getTemplate(originPath) {
     return '' +
         '<div class="u35a38-close-button">x</div>' +
         '<a href="https://www.google.com/" target="_blank">' +
         '  <div class="u35a38-container">' +
         '    <div class="u35a38-content">' +
         '      <div class="u35a38-content-top">' +
-        '        <img class="u35a38-logo" src="u35a38/assets/logo.png">' +
+        '        <img class="u35a38-logo" src="' + `${originPath}` + 'assets/logo.png">' +
         '        <div>' +
         '          <span class="u35a38-font-regular">Building&nbsp;an&nbsp;ethical&nbsp;workplace.</span><br>' +
         '          <span class="u35a38-font-bold">TOGETHER</span>' +
         '        </div>' +
         '      </div>' +
         '      <div class="u35a38-content-bottom">' +
-        '        <img class="u35a38-arrow" src="u35a38/assets/arrow.png">' +
+        '        <img class="u35a38-arrow" src="' + `${originPath}` + 'assets/arrow.png">' +
         '        <div>' +
         '          <span class="u35a38-font-bold">Anonymously&nbsp;report</span>&nbsp;<!--' +
         '          --><span class="u35a38-font-regular">any&nbsp;incident&nbsp;or&nbsp;issue</span>' +
