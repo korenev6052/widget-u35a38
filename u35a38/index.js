@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", init);
 
 function init() {
     const script = document.getElementById('u35a38');
+    const targetLink = script.dataset['href'] || 'https://www.google.com/';
     const originPath = getOriginPath(script.src);
     const userConfig = getUserConfig(script.src);
 
@@ -13,8 +14,8 @@ function init() {
     element.className = 'u35a38';
     setPosition(element, userConfig['align'], userConfig['valign']);
     const winWidth = window.innerWidth;
-    setSize(element, userConfig['width'], winWidth);
-    element.innerHTML = getTemplate(originPath);
+    setSize(element, getMaxWidth(userConfig['width']), winWidth);
+    element.innerHTML = getTemplate(targetLink, originPath);
 
     script.after(stylesheet);
     stylesheet.after(element);
@@ -22,7 +23,7 @@ function init() {
 
     window.addEventListener('resize', (event) => {
         const resizeWinWidth = event.target.innerWidth;
-        setSize(element, userConfig['width'], resizeWinWidth);
+        setSize(element, getMaxWidth(userConfig['width']), resizeWinWidth);
     });
 
     const closeButton = document.querySelector('.u35a38-close-button');
@@ -35,42 +36,8 @@ function getOriginPath(link) {
 }
 
 function setPosition(element, align, valign) {
-    if (align === 'right' && valign === 'bottom') {
-        element.style.right = '0';
-        element.style.bottom = '0';
-        return;
-    }
-    if (align === 'right' && valign === 'center') {
-        element.style.top = '50%';
-        element.style.right = '0';
-        element.style.transform = 'translate(0, -50%)';
-        return;
-    }
-    if (align === 'right' && valign === 'top') {
+    if (align === 'left' && valign === 'top') {
         element.style.top = '0';
-        element.style.right = '0';
-        return;
-    }
-    if (align === 'center' && valign === 'bottom') {
-        element.style.left = '50%';
-        element.style.bottom = '0';
-        element.style.transform = 'translate(-50%, 0)';
-        return;
-    }
-    if (align === 'center' && valign === 'center') {
-        element.style.top = '50%';
-        element.style.left = '50%';
-        element.style.transform = 'translate(-50%, -50%)';
-        return;
-    }
-    if (align === 'center' && valign === 'top') {
-        element.style.top = '0';
-        element.style.left = '50%';
-        element.style.transform = 'translate(-50%, 0)';
-        return;
-    }
-    if (align === 'left' && valign === 'bottom') {
-        element.style.bottom = '0';
         element.style.left = '0';
         return;
     }
@@ -80,18 +47,56 @@ function setPosition(element, align, valign) {
         element.style.transform = 'translate(0, -50%)';
         return;
     }
-    element.style.top = '0';
-    element.style.left = '0';
+    if (align === 'left' && valign === 'bottom') {
+        element.style.bottom = '0';
+        element.style.left = '0';
+        return;
+    }
+    if (align === 'center' && valign === 'top') {
+        element.style.top = '0';
+        element.style.left = '50%';
+        element.style.transform = 'translate(-50%, 0)';
+        return;
+    }
+    if (align === 'center' && valign === 'center') {
+        element.style.top = '50%';
+        element.style.left = '50%';
+        element.style.transform = 'translate(-50%, -50%)';
+        return;
+    }
+    if (align === 'center' && valign === 'bottom') {
+        element.style.left = '50%';
+        element.style.bottom = '0';
+        element.style.transform = 'translate(-50%, 0)';
+        return;
+    }
+    if (align === 'right' && valign === 'top') {
+        element.style.top = '0';
+        element.style.right = '0';
+        return;
+    }
+    if (align === 'right' && valign === 'center') {
+        element.style.top = '50%';
+        element.style.right = '0';
+        element.style.transform = 'translate(0, -50%)';
+        return;
+    }
+    element.style.right = '0';
+    element.style.bottom = '0';
 }
 
 function setSize(element, width, winWidth) {
     const padding = 12;
     if (width + padding < winWidth) {
-        element.style.maxWidth = getMaxWidth(width - padding);
-        element.style.fontSize = getFontSize(width - padding);
+        const maxWidth = getMaxWidth(width - padding);
+        element.style.maxWidth = `${maxWidth}px`;
+        const fontSize = getFontSize(maxWidth);
+        element.style.fontSize = `${fontSize}px`;
     } else {
-        element.style.maxWidth = getMaxWidth(winWidth - padding);
-        element.style.fontSize = getFontSize(winWidth - padding);
+        const maxWidth = getMaxWidth(winWidth - padding);
+        element.style.maxWidth = `${maxWidth}px`;
+        const fontSize = getFontSize(maxWidth);
+        element.style.fontSize = `${fontSize}px`;
     }
 }
 
@@ -117,26 +122,34 @@ function getUserConfig(link) {
 }
 
 function getMaxWidth(width) {
+    console.log(width);
+    const defaultWidth = 350;
     const minWidth = 200;
     const maxWidth = 800;
-    if (!width || width < minWidth) {
-        return `${minWidth}px`;
+    if (!width) {
+        console.log('p1');
+        return defaultWidth;
+    }
+    if (width < minWidth) {
+        console.log('p2');
+        return minWidth;
     }
     if (width > maxWidth) {
-        return `${maxWidth}px`;
+        console.log('p3');
+        return maxWidth;
     }
-    return `${width}px`;
+    console.log('p4');
+    return width;
 }
 
 function getFontSize(width) {
-    const fontSize = Math.round(width / 28);
-    return `${fontSize}px`;
+    return Math.round(width / 28);
 }
 
-function getTemplate(originPath) {
+function getTemplate(targetLink, originPath) {
     return '' +
         '<div class="u35a38-close-button">x</div>' +
-        '<a href="https://www.google.com/" target="_blank">' +
+        '<a href="' + `${targetLink}` + '" target="_blank">' +
         '  <div class="u35a38-container">' +
         '    <div class="u35a38-content">' +
         '      <div class="u35a38-content-top">' +
