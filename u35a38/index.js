@@ -6,22 +6,25 @@ function init() {
     stylesheet.rel = 'stylesheet';
     stylesheet.href = 'u35a38/styles.css';
     const userConfig = getUserConfig(script.src);
+
     const element = document.createElement('div');
     element.className = 'u35a38';
     setPosition(element, userConfig['align'], userConfig['valign']);
     const winWidth = window.innerWidth;
     setSize(element, userConfig['width'], winWidth);
     element.innerHTML = getTemplate();
+
     script.after(stylesheet);
     stylesheet.after(element);
     script.remove();
-
 
     window.addEventListener('resize', (event) => {
         const resizeWinWidth = event.target.innerWidth;
         setSize(element, userConfig['width'], resizeWinWidth);
     });
 
+    const closeButton = document.querySelector('.u35a38-close-button');
+    closeButton.onclick = () => {element.style.display = 'none';};
 }
 
 function setPosition(element, align, valign) {
@@ -75,12 +78,13 @@ function setPosition(element, align, valign) {
 }
 
 function setSize(element, width, winWidth) {
-    if (width < winWidth) {
-        element.style.maxWidth = getMaxWidth(width);
-        element.style.fontSize = getFontSize(width);
+    const padding = 12;
+    if (width + padding < winWidth) {
+        element.style.maxWidth = getMaxWidth(width - padding);
+        element.style.fontSize = getFontSize(width - padding);
     } else {
-        element.style.maxWidth = getMaxWidth(winWidth);
-        element.style.fontSize = getFontSize(winWidth);
+        element.style.maxWidth = getMaxWidth(winWidth - padding);
+        element.style.fontSize = getFontSize(winWidth - padding);
     }
 }
 
@@ -124,22 +128,25 @@ function getFontSize(width) {
 
 function getTemplate() {
     return '' +
-        '<div class="u35a38-container">' +
-        '  <div class="u35a38-content">' +
-        '    <div class="u35a38-content-top">' +
-        '      <img class="u35a38-logo" src="u35a38/assets/logo.png">' +
-        '      <div>' +
-        '        <span class="u35a38-font-regular">Building&nbsp;an&nbsp;ethical&nbsp;workplace.</span><br>' +
-        '        <span class="u35a38-font-bold">TOGETHER</span>' +
+        '<div class="u35a38-close-button">x</div>' +
+        '<a href="https://www.google.com/" target="_blank">' +
+        '  <div class="u35a38-container">' +
+        '    <div class="u35a38-content">' +
+        '      <div class="u35a38-content-top">' +
+        '        <img class="u35a38-logo" src="u35a38/assets/logo.png">' +
+        '        <div>' +
+        '          <span class="u35a38-font-regular">Building&nbsp;an&nbsp;ethical&nbsp;workplace.</span><br>' +
+        '          <span class="u35a38-font-bold">TOGETHER</span>' +
+        '        </div>' +
         '      </div>' +
-        '    </div>' +
-        '    <div class="u35a38-content-bottom">' +
-        '      <img class="u35a38-arrow" src="u35a38/assets/arrow.png">' +
-        '      <div>' +
-        '        <span class="u35a38-font-bold">Anonymously&nbsp;report</span>&nbsp;<!--' +
-        '        --><span class="u35a38-font-regular">any&nbsp;incident&nbsp;or&nbsp;issue</span>' +
+        '      <div class="u35a38-content-bottom">' +
+        '        <img class="u35a38-arrow" src="u35a38/assets/arrow.png">' +
+        '        <div>' +
+        '          <span class="u35a38-font-bold">Anonymously&nbsp;report</span>&nbsp;<!--' +
+        '          --><span class="u35a38-font-regular">any&nbsp;incident&nbsp;or&nbsp;issue</span>' +
+        '        </div>' +
         '      </div>' +
         '    </div>' +
         '  </div>' +
-        '</div>';
+        '</a>';
 }
