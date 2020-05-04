@@ -36,6 +36,8 @@ function getOriginPath(link) {
 }
 
 function setPosition(element, align, valign) {
+    if (!align) align = 'right';
+    if (!valign) valign = 'bottom';
     if (align === 'left' && valign === 'top') {
         element.style.top = '0';
         element.style.left = '0';
@@ -122,23 +124,18 @@ function getUserConfig(link) {
 }
 
 function getMaxWidth(width) {
-    console.log(width);
     const defaultWidth = 350;
     const minWidth = 200;
     const maxWidth = 800;
     if (!width) {
-        console.log('p1');
         return defaultWidth;
     }
     if (width < minWidth) {
-        console.log('p2');
         return minWidth;
     }
     if (width > maxWidth) {
-        console.log('p3');
         return maxWidth;
     }
-    console.log('p4');
     return width;
 }
 
